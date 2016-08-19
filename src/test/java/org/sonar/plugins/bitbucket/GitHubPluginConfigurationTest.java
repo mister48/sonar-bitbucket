@@ -17,7 +17,7 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.sonar.plugins.github;
+package org.sonar.plugins.bitbucket;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +45,7 @@ public class GitHubPluginConfigurationTest {
       config.repository();
     } catch (Exception e) {
       assertThat(e).isInstanceOf(MessageException.class)
-        .hasMessage("Unable to determine GitHub repository name for this project. Please provide it using property '" + GitHubPlugin.GITHUB_REPO
+        .hasMessage("Unable to determine GitHub repository name for this project. Please provide it using property '" + GitHubPlugin.BITBUCKET_REPO
           + "' or configure property '" + CoreProperties.LINKS_SOURCES + "'.");
     }
 
@@ -68,42 +68,42 @@ public class GitHubPluginConfigurationTest {
     }
 
     settings.clear();
-    settings.setProperty(CoreProperties.LINKS_SOURCES, "scm:git:git@github.com:SonarCommunity/github-integration.git");
-    assertThat(config.repository()).isEqualTo("SonarCommunity/github-integration");
+    settings.setProperty(CoreProperties.LINKS_SOURCES, "scm:git:git@bitbucket.com:SonarCommunity/bitbucket-integration.git");
+    assertThat(config.repository()).isEqualTo("SonarCommunity/bitbucket-integration");
 
     settings.setProperty(CoreProperties.LINKS_SOURCES_DEV, "do_not_parse");
-    assertThat(config.repository()).isEqualTo("SonarCommunity/github-integration");
+    assertThat(config.repository()).isEqualTo("SonarCommunity/bitbucket-integration");
 
-    settings.setProperty(CoreProperties.LINKS_SOURCES_DEV, "scm:git:git@github.com:SonarCommunity2/github-integration.git");
-    assertThat(config.repository()).isEqualTo("SonarCommunity2/github-integration");
+    settings.setProperty(CoreProperties.LINKS_SOURCES_DEV, "scm:git:git@bitbucket.com:SonarCommunity2/bitbucket-integration.git");
+    assertThat(config.repository()).isEqualTo("SonarCommunity2/bitbucket-integration");
 
     settings.removeProperty(CoreProperties.LINKS_SOURCES);
-    assertThat(config.repository()).isEqualTo("SonarCommunity2/github-integration");
+    assertThat(config.repository()).isEqualTo("SonarCommunity2/bitbucket-integration");
 
-    settings.setProperty(GitHubPlugin.GITHUB_REPO, "https://github.com/SonarCommunity/sonar-github.git");
-    assertThat(config.repository()).isEqualTo("SonarCommunity/sonar-github");
-    settings.setProperty(GitHubPlugin.GITHUB_REPO, "http://github.com/SonarCommunity/sonar-github.git");
-    assertThat(config.repository()).isEqualTo("SonarCommunity/sonar-github");
-    settings.setProperty(GitHubPlugin.GITHUB_REPO, "SonarCommunity3/github-integration");
-    assertThat(config.repository()).isEqualTo("SonarCommunity3/github-integration");
+    settings.setProperty(GitHubPlugin.BITBUCKET_REPO, "https://bitbucket.com/SonarCommunity/sonar-bitbucket.git");
+    assertThat(config.repository()).isEqualTo("SonarCommunity/sonar-bitbucket");
+    settings.setProperty(GitHubPlugin.BITBUCKET_REPO, "http://bitbucket.com/SonarCommunity/sonar-bitbucket.git");
+    assertThat(config.repository()).isEqualTo("SonarCommunity/sonar-bitbucket");
+    settings.setProperty(GitHubPlugin.BITBUCKET_REPO, "SonarCommunity3/bitbucket-integration");
+    assertThat(config.repository()).isEqualTo("SonarCommunity3/bitbucket-integration");
   }
 
   @Test
   public void other() {
-    settings.setProperty(GitHubPlugin.GITHUB_OAUTH, "oauth");
+    settings.setProperty(GitHubPlugin.BITBUCKET_OAUTH, "oauth");
     assertThat(config.oauth()).isEqualTo("oauth");
 
     assertThat(config.isEnabled()).isFalse();
-    settings.setProperty(GitHubPlugin.GITHUB_PULL_REQUEST, "3");
+    settings.setProperty(GitHubPlugin.BITBUCKET_PULL_REQUEST, "3");
     assertThat(config.pullRequestNumber()).isEqualTo(3);
     assertThat(config.isEnabled()).isTrue();
 
-    assertThat(config.endpoint()).isEqualTo("https://api.github.com");
-    settings.setProperty(GitHubPlugin.GITHUB_ENDPOINT, "http://myprivate-endpoint");
+    assertThat(config.endpoint()).isEqualTo("https://api.bitbucket.com");
+    settings.setProperty(GitHubPlugin.BITBUCKET_ENDPOINT, "http://myprivate-endpoint");
     assertThat(config.endpoint()).isEqualTo("http://myprivate-endpoint");
 
     assertThat(config.tryReportIssuesInline()).isTrue();
-    settings.setProperty(GitHubPlugin.GITHUB_DISABLE_INLINE_COMMENTS, "true");
+    settings.setProperty(GitHubPlugin.BITBUCKET_DISABLE_INLINE_COMMENTS, "true");
     assertThat(config.tryReportIssuesInline()).isFalse();
   }
 

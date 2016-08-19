@@ -17,7 +17,7 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.sonar.plugins.github;
+package org.sonar.plugins.bitbucket;
 
 import java.io.File;
 import org.junit.Before;
@@ -66,7 +66,7 @@ public class PullRequestProjectBuilderTest {
 
   @Test
   public void shouldFailIfNotPreview() {
-    settings.setProperty(GitHubPlugin.GITHUB_PULL_REQUEST, "1");
+    settings.setProperty(GitHubPlugin.BITBUCKET_PULL_REQUEST, "1");
 
     thrown.expect(MessageException.class);
     thrown.expectMessage("The GitHub plugin is only intended to be used in preview or issues mode. Please set 'sonar.analysis.mode'.");
@@ -76,7 +76,7 @@ public class PullRequestProjectBuilderTest {
 
   @Test
   public void shouldNotFailIfIssues() {
-    settings.setProperty(GitHubPlugin.GITHUB_PULL_REQUEST, "1");
+    settings.setProperty(GitHubPlugin.BITBUCKET_PULL_REQUEST, "1");
     when(mode.isIssues()).thenReturn(true);
 
     pullRequestProjectBuilder.build(mock(ProjectBuilder.Context.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS)));

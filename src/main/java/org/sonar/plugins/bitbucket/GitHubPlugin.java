@@ -17,7 +17,7 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.sonar.plugins.github;
+package org.sonar.plugins.bitbucket;
 
 import org.sonar.api.CoreProperties;
 import org.sonar.api.Plugin;
@@ -27,25 +27,25 @@ import org.sonar.api.PropertyType;
 
 @Properties({
   @Property(
-    key = GitHubPlugin.GITHUB_ENDPOINT,
-    defaultValue = "https://api.github.com",
+    key = GitHubPlugin.BITBUCKET_ENDPOINT,
+    defaultValue = "https://api.bitbucket.com",
     name = "GitHub API Endpoint",
     description = "URL to access GitHub WS API. Deafult value is fine for public GitHub. Can be modified for GitHub enterprise.",
     global = true),
   @Property(
-    key = GitHubPlugin.GITHUB_OAUTH,
+    key = GitHubPlugin.BITBUCKET_OAUTH,
     name = "GitHub OAuth token",
     description = "Authentication token",
     global = false,
     type = PropertyType.PASSWORD),
   @Property(
-    key = GitHubPlugin.GITHUB_REPO,
+    key = GitHubPlugin.BITBUCKET_REPO,
     name = "GitHub repository",
     description = "GitHub repository for this project. Will be guessed from '" + CoreProperties.LINKS_SOURCES_DEV + "' if present",
     project = false,
     global = false),
   @Property(
-    key = GitHubPlugin.GITHUB_PULL_REQUEST,
+    key = GitHubPlugin.BITBUCKET_PULL_REQUEST,
     name = "GitHub Pull Request",
     description = "Pull request number",
     project = false,
@@ -53,7 +53,7 @@ import org.sonar.api.PropertyType;
     global = false,
     type = PropertyType.INTEGER),
   @Property(
-    key = GitHubPlugin.GITHUB_DISABLE_INLINE_COMMENTS,
+    key = GitHubPlugin.BITBUCKET_DISABLE_INLINE_COMMENTS,
     defaultValue = "false",
     name = "Disable issue reporting as inline comments",
     description = "Issues will not be reported as inline comments but only in the global summary comment",
@@ -63,11 +63,11 @@ import org.sonar.api.PropertyType;
 })
 public class GitHubPlugin implements Plugin {
 
-  public static final String GITHUB_ENDPOINT = "sonar.github.endpoint";
-  public static final String GITHUB_OAUTH = "sonar.github.oauth";
-  public static final String GITHUB_REPO = "sonar.github.repository";
-  public static final String GITHUB_PULL_REQUEST = "sonar.github.pullRequest";
-  public static final String GITHUB_DISABLE_INLINE_COMMENTS = "sonar.github.disableInlineComments";
+  public static final String BITBUCKET_ENDPOINT = "sonar.bitbucket.endpoint";
+  public static final String BITBUCKET_OAUTH = "sonar.bitbucket.oauth";
+  public static final String BITBUCKET_REPO = "sonar.bitbucket.repository";
+  public static final String BITBUCKET_PULL_REQUEST = "sonar.bitbucket.pullRequest";
+  public static final String BITBUCKET_DISABLE_INLINE_COMMENTS = "sonar.bitbucket.disableInlineComments";
 
   @Override
   public void define(Context context) {

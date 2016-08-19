@@ -17,7 +17,7 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.sonar.plugins.github;
+package org.sonar.plugins.bitbucket;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -31,15 +31,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
-import org.kohsuke.github.GHCommitState;
-import org.kohsuke.github.GHCommitStatus;
-import org.kohsuke.github.GHIssueComment;
-import org.kohsuke.github.GHPullRequest;
-import org.kohsuke.github.GHPullRequestFileDetail;
-import org.kohsuke.github.GHPullRequestReviewComment;
-import org.kohsuke.github.GHRepository;
-import org.kohsuke.github.GitHub;
-import org.kohsuke.github.GitHubBuilder;
+import org.kohsuke.bitbucket.GHCommitState;
+import org.kohsuke.bitbucket.GHCommitStatus;
+import org.kohsuke.bitbucket.GHIssueComment;
+import org.kohsuke.bitbucket.GHPullRequest;
+import org.kohsuke.bitbucket.GHPullRequestFileDetail;
+import org.kohsuke.bitbucket.GHPullRequestReviewComment;
+import org.kohsuke.bitbucket.GHRepository;
+import org.kohsuke.bitbucket.GitHub;
+import org.kohsuke.bitbucket.GitHubBuilder;
 import org.sonar.api.batch.BatchSide;
 import org.sonar.api.batch.InstantiationStrategy;
 import org.sonar.api.batch.fs.InputComponent;
@@ -77,11 +77,11 @@ public class PullRequestFacade {
   public void init(int pullRequestNumber, File projectBaseDir) {
     initGitBaseDir(projectBaseDir);
     try {
-      GitHub github = new GitHubBuilder().withEndpoint(config.endpoint()).withOAuthToken(config.oauth()).build();
-      setGhRepo(github.getRepository(config.repository()));
+      GitHub bitbucket = new GitHubBuilder().withEndpoint(config.endpoint()).withOAuthToken(config.oauth()).build();
+      setGhRepo(bitbucket.getRepository(config.repository()));
       setPr(ghRepo.getPullRequest(pullRequestNumber));
       LOG.info("Starting analysis of pull request: " + pr.getHtmlUrl());
-      myself = github.getMyself().getLogin();
+      myself = bitbucket.getMyself().getLogin();
       loadExistingReviewComments();
       patchPositionMappingByFile = mapPatchPositionsToLines(pr);
     } catch (IOException e) {
@@ -123,7 +123,7 @@ public class PullRequestFacade {
   }
 
   /**
-   * Load all previous comments made by provided github account.
+   * Load all previous comments made by provided bitbucket account.
    */
   private void loadExistingReviewComments() throws IOException {
     for (GHPullRequestReviewComment comment : pr.listReviewComments()) {
@@ -284,7 +284,7 @@ public class PullRequestFacade {
   }
 
   @CheckForNull
-  public String getGithubUrl(@Nullable InputComponent inputComponent, @Nullable Integer issueLine) {
+  public String getBitbucketUrl(@Nullable InputComponent inputComponent, @Nullable Integer issueLine) {
     if (inputComponent instanceof InputPath) {
       String path = getPath((InputPath) inputComponent);
       return ghRepo.getHtmlUrl().toString() + "/blob/" + pr.getHead().getSha() + "/" + path + (issueLine != null ? ("#L" + issueLine) : "");

@@ -17,13 +17,13 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.sonar.plugins.github;
+package org.sonar.plugins.bitbucket;
 
 import java.util.Arrays;
 import javax.annotation.CheckForNull;
 import org.junit.Before;
 import org.junit.Test;
-import org.kohsuke.github.GHCommitState;
+import org.kohsuke.bitbucket.GHCommitState;
 import org.mockito.ArgumentCaptor;
 import org.sonar.api.CoreProperties;
 import org.sonar.api.batch.fs.InputFile;
@@ -101,10 +101,10 @@ public class PullRequestIssuePostJobTest {
   public void testPullRequestAnalysisWithNewIssues() {
     DefaultInputFile inputFile1 = new DefaultInputFile("foo", "src/Foo.php");
     PostJobIssue newIssue = newMockedIssue("foo:src/Foo.php", inputFile1, 1, Severity.BLOCKER, true, "msg1");
-    when(pullRequestFacade.getGithubUrl(inputFile1, 1)).thenReturn("http://github/blob/abc123/src/Foo.php#L1");
+    when(pullRequestFacade.getBitbucketUrl(inputFile1, 1)).thenReturn("http://bitbucket/blob/abc123/src/Foo.php#L1");
 
     PostJobIssue lineNotVisible = newMockedIssue("foo:src/Foo.php", inputFile1, 2, Severity.BLOCKER, true, "msg2");
-    when(pullRequestFacade.getGithubUrl(inputFile1, 2)).thenReturn("http://github/blob/abc123/src/Foo.php#L2");
+    when(pullRequestFacade.getBitbucketUrl(inputFile1, 2)).thenReturn("http://bitbucket/blob/abc123/src/Foo.php#L2");
 
     DefaultInputFile inputFile2 = new DefaultInputFile("foo", "src/Foo2.php");
     PostJobIssue fileNotInPR = newMockedIssue("foo:src/Foo2.php", inputFile2, 1, Severity.BLOCKER, true, "msg3");
@@ -124,14 +124,14 @@ public class PullRequestIssuePostJobTest {
     pullRequestIssuePostJob.execute(context);
     verify(pullRequestFacade).createOrUpdateGlobalComments(contains("SonarQube analysis reported 5 issues"));
     verify(pullRequestFacade)
-      .createOrUpdateGlobalComments(contains("* ![BLOCKER](https://raw.githubusercontent.com/SonarCommunity/sonar-github/master/images/severity-blocker.png) 5 blocker"));
+      .createOrUpdateGlobalComments(contains("* ![BLOCKER](https://raw.bitbucketusercontent.com/SonarCommunity/sonar-bitbucket/master/images/severity-blocker.png) 5 blocker"));
     verify(pullRequestFacade)
       .createOrUpdateGlobalComments(
         not(contains("1. [Project")));
     verify(pullRequestFacade)
       .createOrUpdateGlobalComments(
         contains(
-          "1. ![BLOCKER](https://raw.githubusercontent.com/SonarCommunity/sonar-github/master/images/severity-blocker.png) [Foo.php#L2](http://github/blob/abc123/src/Foo.php#L2): msg2 [![rule](https://raw.githubusercontent.com/SonarCommunity/sonar-github/master/images/rule.png)](http://myserver/coding_rules#rule_key=repo%3Arule)"));
+          "1. ![BLOCKER](https://raw.bitbucketusercontent.com/SonarCommunity/sonar-bitbucket/master/images/severity-blocker.png) [Foo.php#L2](http://bitbucket/blob/abc123/src/Foo.php#L2): msg2 [![rule](https://raw.bitbucketusercontent.com/SonarCommunity/sonar-bitbucket/master/images/rule.png)](http://myserver/coding_rules#rule_key=repo%3Arule)"));
 
     verify(pullRequestFacade).createOrUpdateSonarQubeStatus(GHCommitState.ERROR, "SonarQube reported 5 issues, with 5 blocker");
   }
@@ -144,11 +144,11 @@ public class PullRequestIssuePostJobTest {
 
     // Blocker and 8th line => Should be displayed in 3rd position
     PostJobIssue newIssue = newMockedIssue("foo:src/Foo.php", inputFile1, 8, Severity.BLOCKER, true, "msg1");
-    when(pullRequestFacade.getGithubUrl(inputFile1, 1)).thenReturn("http://github/blob/abc123/src/Foo.php#L1");
+    when(pullRequestFacade.getBitbucketUrl(inputFile1, 1)).thenReturn("http://bitbucket/blob/abc123/src/Foo.php#L1");
 
     // Blocker and 2nd line (Foo2.php) => Should be displayed in 4th position
     PostJobIssue issueInSecondFile = newMockedIssue("foo:src/Foo2.php", inputFile2, 2, Severity.BLOCKER, true, "msg2");
-    when(pullRequestFacade.getGithubUrl(inputFile1, 2)).thenReturn("http://github/blob/abc123/src/Foo.php#L2");
+    when(pullRequestFacade.getBitbucketUrl(inputFile1, 2)).thenReturn("http://bitbucket/blob/abc123/src/Foo.php#L2");
 
     // Major => Should be displayed in 6th position
     PostJobIssue newIssue2 = newMockedIssue("foo:src/Foo.php", inputFile1, 4, Severity.MAJOR, true, "msg3");
@@ -181,7 +181,7 @@ public class PullRequestIssuePostJobTest {
   public void testPullRequestAnalysisWithNewCriticalIssues() {
     DefaultInputFile inputFile1 = new DefaultInputFile("foo", "src/Foo.php");
     PostJobIssue newIssue = newMockedIssue("foo:src/Foo.php", inputFile1, 1, Severity.CRITICAL, true, "msg1");
-    when(pullRequestFacade.getGithubUrl(inputFile1, 1)).thenReturn("http://github/blob/abc123/src/Foo.php#L1");
+    when(pullRequestFacade.getBitbucketUrl(inputFile1, 1)).thenReturn("http://bitbucket/blob/abc123/src/Foo.php#L1");
 
     when(context.issues()).thenReturn(Arrays.<PostJobIssue>asList(newIssue));
     when(pullRequestFacade.hasFile(inputFile1)).thenReturn(true);
@@ -196,7 +196,7 @@ public class PullRequestIssuePostJobTest {
   public void testPullRequestAnalysisWithNewIssuesNoBlockerNorCritical() {
     DefaultInputFile inputFile1 = new DefaultInputFile("foo", "src/Foo.php");
     PostJobIssue newIssue = newMockedIssue("foo:src/Foo.php", inputFile1, 1, Severity.MAJOR, true, "msg1");
-    when(pullRequestFacade.getGithubUrl(inputFile1, 1)).thenReturn("http://github/blob/abc123/src/Foo.php#L1");
+    when(pullRequestFacade.getBitbucketUrl(inputFile1, 1)).thenReturn("http://bitbucket/blob/abc123/src/Foo.php#L1");
 
     when(context.issues()).thenReturn(Arrays.<PostJobIssue>asList(newIssue));
     when(pullRequestFacade.hasFile(inputFile1)).thenReturn(true);
@@ -211,10 +211,10 @@ public class PullRequestIssuePostJobTest {
   public void testPullRequestAnalysisWithNewBlockerAndCriticalIssues() {
     DefaultInputFile inputFile1 = new DefaultInputFile("foo", "src/Foo.php");
     PostJobIssue newIssue = newMockedIssue("foo:src/Foo.php", inputFile1, 1, Severity.CRITICAL, true, "msg1");
-    when(pullRequestFacade.getGithubUrl(inputFile1, 1)).thenReturn("http://github/blob/abc123/src/Foo.php#L1");
+    when(pullRequestFacade.getBitbucketUrl(inputFile1, 1)).thenReturn("http://bitbucket/blob/abc123/src/Foo.php#L1");
 
     PostJobIssue lineNotVisible = newMockedIssue("foo:src/Foo.php", inputFile1, 2, Severity.BLOCKER, true, "msg2");
-    when(pullRequestFacade.getGithubUrl(inputFile1, 2)).thenReturn("http://github/blob/abc123/src/Foo.php#L2");
+    when(pullRequestFacade.getBitbucketUrl(inputFile1, 2)).thenReturn("http://bitbucket/blob/abc123/src/Foo.php#L2");
 
     when(context.issues()).thenReturn(Arrays.<PostJobIssue>asList(newIssue, lineNotVisible));
     when(pullRequestFacade.hasFile(inputFile1)).thenReturn(true);

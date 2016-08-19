@@ -17,11 +17,11 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.sonar.plugins.github;
+package org.sonar.plugins.bitbucket;
 
 import java.util.Locale;
 import javax.annotation.Nullable;
-import org.kohsuke.github.GHCommitState;
+import org.kohsuke.bitbucket.GHCommitState;
 import org.sonar.api.batch.postjob.issue.PostJobIssue;
 import org.sonar.api.batch.rule.Severity;
 
@@ -148,13 +148,13 @@ public class GlobalReport {
     }
   }
 
-  public void process(PostJobIssue issue, @Nullable String githubUrl, boolean reportedOnDiff) {
+  public void process(PostJobIssue issue, @Nullable String bitbucketUrl, boolean reportedOnDiff) {
     increment(issue.severity());
     if (!reportedOnDiff) {
       if (extraIssueCount < maxGlobalReportedIssues) {
         notReportedOnDiff
           .append("1. ")
-          .append(markDownUtils.globalIssue(issue.severity(), issue.message(), issue.ruleKey().toString(), githubUrl, issue.componentKey()))
+          .append(markDownUtils.globalIssue(issue.severity(), issue.message(), issue.ruleKey().toString(), bitbucketUrl, issue.componentKey()))
           .append("\n");
       }
       extraIssueCount++;

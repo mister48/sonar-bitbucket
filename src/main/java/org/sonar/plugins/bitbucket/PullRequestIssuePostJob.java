@@ -17,7 +17,7 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.sonar.plugins.github;
+package org.sonar.plugins.bitbucket;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -50,7 +50,7 @@ public class PullRequestIssuePostJob implements PostJob {
   public void describe(PostJobDescriptor descriptor) {
     descriptor
       .name("GitHub Pull Request Issue Publisher")
-      .requireProperty(GitHubPlugin.GITHUB_PULL_REQUEST);
+      .requireProperty(GitHubPlugin.BITBUCKET_PULL_REQUEST);
   }
 
   @Override
@@ -91,7 +91,7 @@ public class PullRequestIssuePostJob implements PostJob {
     if (gitHubPluginConfiguration.tryReportIssuesInline() && inputComponent != null && inputComponent.isFile()) {
       reportedInline = tryReportInline(commentToBeAddedByFileAndByLine, issue, (InputFile) inputComponent);
     }
-    report.process(issue, pullRequestFacade.getGithubUrl(inputComponent, issue.line()), reportedInline);
+    report.process(issue, pullRequestFacade.getBitbucketUrl(inputComponent, issue.line()), reportedInline);
   }
 
   private boolean tryReportInline(Map<InputFile, Map<Integer, StringBuilder>> commentToBeAddedByFileAndByLine, PostJobIssue issue, InputFile inputFile) {

@@ -17,7 +17,7 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.sonar.plugins.github;
+package org.sonar.plugins.bitbucket;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -35,7 +35,7 @@ import org.sonar.api.config.Settings;
 @InstantiationStrategy(InstantiationStrategy.PER_BATCH)
 public class MarkDownUtils {
 
-  private static final String IMAGES_ROOT_URL = "https://raw.githubusercontent.com/SonarCommunity/sonar-github/master/images/";
+  private static final String IMAGES_ROOT_URL = "https://raw.bitbucketusercontent.com/SonarCommunity/sonar-bitbucket/master/images/";
   private final String ruleUrlPrefix;
 
   public MarkDownUtils(Settings settings) {

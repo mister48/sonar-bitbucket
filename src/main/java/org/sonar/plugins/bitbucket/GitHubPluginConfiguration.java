@@ -17,7 +17,7 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.sonar.plugins.github;
+package org.sonar.plugins.bitbucket;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,22 +42,22 @@ public class GitHubPluginConfiguration {
 
   public GitHubPluginConfiguration(Settings settings) {
     this.settings = settings;
-    this.gitSshPattern = Pattern.compile(".*@github\\.com:(.*/.*)\\.git");
-    this.gitHttpPattern = Pattern.compile("https?://github\\.com/(.*/.*)\\.git");
+    this.gitSshPattern = Pattern.compile(".*@bitbucket\\.com:(.*/.*)\\.git");
+    this.gitHttpPattern = Pattern.compile("https?://bitbucket\\.com/(.*/.*)\\.git");
   }
 
   public int pullRequestNumber() {
-    return settings.getInt(GitHubPlugin.GITHUB_PULL_REQUEST);
+    return settings.getInt(GitHubPlugin.BITBUCKET_PULL_REQUEST);
   }
 
   public String repository() {
-    if (settings.hasKey(GitHubPlugin.GITHUB_REPO)) {
+    if (settings.hasKey(GitHubPlugin.BITBUCKET_REPO)) {
       return repoFromProp();
     }
     if (isNotBlank(settings.getString(CoreProperties.LINKS_SOURCES_DEV)) || isNotBlank(settings.getString(CoreProperties.LINKS_SOURCES))) {
       return repoFromScmProps();
     }
-    throw MessageException.of("Unable to determine GitHub repository name for this project. Please provide it using property '" + GitHubPlugin.GITHUB_REPO
+    throw MessageException.of("Unable to determine GitHub repository name for this project. Please provide it using property '" + GitHubPlugin.BITBUCKET_REPO
       + "' or configure property '" + CoreProperties.LINKS_SOURCES + "'.");
   }
 
@@ -79,7 +79,7 @@ public class GitHubPluginConfiguration {
   }
 
   private String repoFromProp() {
-    String urlOrRepo = settings.getString(GitHubPlugin.GITHUB_REPO);
+    String urlOrRepo = settings.getString(GitHubPlugin.BITBUCKET_REPO);
     String repo = extractRepoFromGitUrl(urlOrRepo);
     if (repo == null) {
       return urlOrRepo;
@@ -102,19 +102,19 @@ public class GitHubPluginConfiguration {
 
   @CheckForNull
   public String oauth() {
-    return settings.getString(GitHubPlugin.GITHUB_OAUTH);
+    return settings.getString(GitHubPlugin.BITBUCKET_OAUTH);
   }
 
   public boolean isEnabled() {
-    return settings.hasKey(GitHubPlugin.GITHUB_PULL_REQUEST);
+    return settings.hasKey(GitHubPlugin.BITBUCKET_PULL_REQUEST);
   }
 
   public String endpoint() {
-    return settings.getString(GitHubPlugin.GITHUB_ENDPOINT);
+    return settings.getString(GitHubPlugin.BITBUCKET_ENDPOINT);
   }
 
   public boolean tryReportIssuesInline() {
-    return !settings.getBoolean(GitHubPlugin.GITHUB_DISABLE_INLINE_COMMENTS);
+    return !settings.getBoolean(GitHubPlugin.BITBUCKET_DISABLE_INLINE_COMMENTS);
   }
 
 }

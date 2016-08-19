@@ -17,21 +17,8 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.sonar.plugins.github;
+@ParametersAreNonnullByDefault
+package org.sonar.plugins.bitbucket;
 
-import org.junit.Test;
-import org.sonar.api.Plugin;
-import org.sonar.api.utils.Version;
+import javax.annotation.ParametersAreNonnullByDefault;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-public class GitHubPluginTest {
-
-  @Test
-  public void uselessTest() {
-    Plugin.Context context = new Plugin.Context(Version.parse("5.6"));
-    new GitHubPlugin().define(context);
-    assertThat(context.getExtensions().size()).isGreaterThan(1);
-  }
-
-}

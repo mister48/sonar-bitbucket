@@ -1,5 +1,5 @@
 /*
- * SonarQube :: GitHub Plugin
+ * SonarQube :: Bitbucket Plugin
  * Copyright (C) 2015-2016 SonarSource SA
  * mailto:contact AT sonarsource DOT com
  *
@@ -23,6 +23,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.StreamSupport;
+
 import org.sonar.api.batch.fs.InputComponent;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.postjob.PostJob;
@@ -37,10 +38,10 @@ public class PullRequestIssuePostJob implements PostJob {
   private static final Comparator<PostJobIssue> ISSUE_COMPARATOR = new IssueComparator();
 
   private final PullRequestFacade pullRequestFacade;
-  private final GitHubPluginConfiguration gitHubPluginConfiguration;
+  private final BitbucketPluginConfiguration gitHubPluginConfiguration;
   private final MarkDownUtils markDownUtils;
 
-  public PullRequestIssuePostJob(GitHubPluginConfiguration gitHubPluginConfiguration, PullRequestFacade pullRequestFacade, MarkDownUtils markDownUtils) {
+  public PullRequestIssuePostJob(BitbucketPluginConfiguration gitHubPluginConfiguration, PullRequestFacade pullRequestFacade, MarkDownUtils markDownUtils) {
     this.gitHubPluginConfiguration = gitHubPluginConfiguration;
     this.pullRequestFacade = pullRequestFacade;
     this.markDownUtils = markDownUtils;
@@ -49,8 +50,8 @@ public class PullRequestIssuePostJob implements PostJob {
   @Override
   public void describe(PostJobDescriptor descriptor) {
     descriptor
-      .name("GitHub Pull Request Issue Publisher")
-      .requireProperty(GitHubPlugin.BITBUCKET_PULL_REQUEST);
+      .name("Bitbucket Pull Request Issue Publisher")
+      .requireProperty(BitbucketPlugin.BITBUCKET_PULL_REQUEST);
   }
 
   @Override

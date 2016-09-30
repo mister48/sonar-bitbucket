@@ -1,5 +1,5 @@
 /*
- * SonarQube :: GitHub Plugin
+ * SonarQube :: Bitbucket Plugin
  * Copyright (C) 2015-2016 SonarSource SA
  * mailto:contact AT sonarsource DOT com
  *
@@ -19,6 +19,8 @@
  */
 package org.sonar.plugins.bitbucket;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.CoreProperties;
@@ -26,17 +28,15 @@ import org.sonar.api.config.PropertyDefinitions;
 import org.sonar.api.config.Settings;
 import org.sonar.api.utils.MessageException;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-public class GitHubPluginConfigurationTest {
+public class BitbucketPluginConfigurationTest {
 
   private Settings settings;
-  private GitHubPluginConfiguration config;
+  private BitbucketPluginConfiguration config;
 
   @Before
   public void prepare() {
-    settings = new Settings(new PropertyDefinitions(GitHubPlugin.class));
-    config = new GitHubPluginConfiguration(settings);
+    settings = new Settings(new PropertyDefinitions(BitbucketPlugin.class));
+    config = new BitbucketPluginConfiguration(settings);
   }
 
   @Test
@@ -45,7 +45,7 @@ public class GitHubPluginConfigurationTest {
       config.repository();
     } catch (Exception e) {
       assertThat(e).isInstanceOf(MessageException.class)
-        .hasMessage("Unable to determine GitHub repository name for this project. Please provide it using property '" + GitHubPlugin.BITBUCKET_REPO
+        .hasMessage("Unable to determine Bitbucket repository name for this project. Please provide it using property '" + BitbucketPlugin.BITBUCKET_REPO
           + "' or configure property '" + CoreProperties.LINKS_SOURCES + "'.");
     }
 
@@ -54,7 +54,7 @@ public class GitHubPluginConfigurationTest {
       config.repository();
     } catch (Exception e) {
       assertThat(e).isInstanceOf(MessageException.class)
-        .hasMessage("Unable to parse GitHub repository name for this project. Please check configuration:\n  * " + CoreProperties.LINKS_SOURCES_DEV
+        .hasMessage("Unable to parse Bitbucket repository name for this project. Please check configuration:\n  * " + CoreProperties.LINKS_SOURCES_DEV
           + ": null\n  * " + CoreProperties.LINKS_SOURCES + ": do_not_match_1");
     }
     settings.clear();
@@ -63,7 +63,7 @@ public class GitHubPluginConfigurationTest {
       config.repository();
     } catch (Exception e) {
       assertThat(e).isInstanceOf(MessageException.class)
-        .hasMessage("Unable to parse GitHub repository name for this project. Please check configuration:\n  * " + CoreProperties.LINKS_SOURCES_DEV
+        .hasMessage("Unable to parse Bitbucket repository name for this project. Please check configuration:\n  * " + CoreProperties.LINKS_SOURCES_DEV
           + ": do_not_match_2\n  * " + CoreProperties.LINKS_SOURCES + ": null");
     }
 
@@ -80,30 +80,30 @@ public class GitHubPluginConfigurationTest {
     settings.removeProperty(CoreProperties.LINKS_SOURCES);
     assertThat(config.repository()).isEqualTo("SonarCommunity2/bitbucket-integration");
 
-    settings.setProperty(GitHubPlugin.BITBUCKET_REPO, "https://bitbucket.com/SonarCommunity/sonar-bitbucket.git");
+    settings.setProperty(BitbucketPlugin.BITBUCKET_REPO, "https://bitbucket.com/SonarCommunity/sonar-bitbucket.git");
     assertThat(config.repository()).isEqualTo("SonarCommunity/sonar-bitbucket");
-    settings.setProperty(GitHubPlugin.BITBUCKET_REPO, "http://bitbucket.com/SonarCommunity/sonar-bitbucket.git");
+    settings.setProperty(BitbucketPlugin.BITBUCKET_REPO, "http://bitbucket.com/SonarCommunity/sonar-bitbucket.git");
     assertThat(config.repository()).isEqualTo("SonarCommunity/sonar-bitbucket");
-    settings.setProperty(GitHubPlugin.BITBUCKET_REPO, "SonarCommunity3/bitbucket-integration");
+    settings.setProperty(BitbucketPlugin.BITBUCKET_REPO, "SonarCommunity3/bitbucket-integration");
     assertThat(config.repository()).isEqualTo("SonarCommunity3/bitbucket-integration");
   }
 
   @Test
   public void other() {
-    settings.setProperty(GitHubPlugin.BITBUCKET_OAUTH, "oauth");
+    settings.setProperty(BitbucketPlugin.BITBUCKET_OAUTH, "oauth");
     assertThat(config.oauth()).isEqualTo("oauth");
 
     assertThat(config.isEnabled()).isFalse();
-    settings.setProperty(GitHubPlugin.BITBUCKET_PULL_REQUEST, "3");
+    settings.setProperty(BitbucketPlugin.BITBUCKET_PULL_REQUEST, "3");
     assertThat(config.pullRequestNumber()).isEqualTo(3);
     assertThat(config.isEnabled()).isTrue();
 
     assertThat(config.endpoint()).isEqualTo("https://api.bitbucket.com");
-    settings.setProperty(GitHubPlugin.BITBUCKET_ENDPOINT, "http://myprivate-endpoint");
+    settings.setProperty(BitbucketPlugin.BITBUCKET_ENDPOINT, "http://myprivate-endpoint");
     assertThat(config.endpoint()).isEqualTo("http://myprivate-endpoint");
 
     assertThat(config.tryReportIssuesInline()).isTrue();
-    settings.setProperty(GitHubPlugin.BITBUCKET_DISABLE_INLINE_COMMENTS, "true");
+    settings.setProperty(BitbucketPlugin.BITBUCKET_DISABLE_INLINE_COMMENTS, "true");
     assertThat(config.tryReportIssuesInline()).isFalse();
   }
 

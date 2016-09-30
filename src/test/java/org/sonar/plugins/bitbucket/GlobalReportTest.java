@@ -1,5 +1,5 @@
 /*
- * SonarQube :: GitHub Plugin
+ * SonarQube :: Bitbucket Plugin
  * Copyright (C) 2015-2016 SonarSource SA
  * mailto:contact AT sonarsource DOT com
  *
@@ -19,7 +19,12 @@
  */
 package org.sonar.plugins.bitbucket;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import javax.annotation.CheckForNull;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.CoreProperties;
@@ -30,10 +35,6 @@ import org.sonar.api.config.PropertyDefinition;
 import org.sonar.api.config.PropertyDefinitions;
 import org.sonar.api.config.Settings;
 import org.sonar.api.rule.RuleKey;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class GlobalReportTest {
 

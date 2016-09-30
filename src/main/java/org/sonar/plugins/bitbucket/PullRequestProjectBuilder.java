@@ -1,5 +1,5 @@
 /*
- * SonarQube :: GitHub Plugin
+ * SonarQube :: Bitbucket Plugin
  * Copyright (C) 2015-2016 SonarSource SA
  * mailto:contact AT sonarsource DOT com
  *
@@ -32,11 +32,11 @@ import org.sonar.api.utils.MessageException;
  */
 public class PullRequestProjectBuilder extends ProjectBuilder {
 
-  private final GitHubPluginConfiguration gitHubPluginConfiguration;
+  private final BitbucketPluginConfiguration gitHubPluginConfiguration;
   private final PullRequestFacade pullRequestFacade;
   private final AnalysisMode mode;
 
-  public PullRequestProjectBuilder(GitHubPluginConfiguration gitHubPluginConfiguration, PullRequestFacade pullRequestFacade, AnalysisMode mode) {
+  public PullRequestProjectBuilder(BitbucketPluginConfiguration gitHubPluginConfiguration, PullRequestFacade pullRequestFacade, AnalysisMode mode) {
     this.gitHubPluginConfiguration = gitHubPluginConfiguration;
     this.pullRequestFacade = pullRequestFacade;
     this.mode = mode;
@@ -56,7 +56,7 @@ public class PullRequestProjectBuilder extends ProjectBuilder {
 
   private void checkMode() {
     if (!mode.isIssues()) {
-      throw MessageException.of("The GitHub plugin is only intended to be used in preview or issues mode. Please set '" + CoreProperties.ANALYSIS_MODE + "'.");
+      throw MessageException.of("The Bitbucket plugin is only intended to be used in preview or issues mode. Please set '" + CoreProperties.ANALYSIS_MODE + "'.");
     }
 
   }

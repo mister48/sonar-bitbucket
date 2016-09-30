@@ -1,5 +1,5 @@
 /*
- * SonarQube :: GitHub Plugin
+ * SonarQube :: Bitbucket Plugin
  * Copyright (C) 2015-2016 SonarSource SA
  * mailto:contact AT sonarsource DOT com
  *
@@ -19,6 +19,12 @@
  */
 package org.sonar.plugins.bitbucket;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.withSettings;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -27,6 +33,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.assertj.core.data.MapEntry;
 import org.junit.Rule;
 import org.junit.Test;
@@ -39,12 +46,6 @@ import org.mockito.Mockito;
 import org.sonar.api.batch.fs.InputPath;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.withSettings;
-
 public class PullRequestFacadeTest {
 
   @Rule
@@ -55,7 +56,7 @@ public class PullRequestFacadeTest {
 
     File gitBasedir = temp.newFolder();
 
-    PullRequestFacade facade = new PullRequestFacade(mock(GitHubPluginConfiguration.class));
+    PullRequestFacade facade = new PullRequestFacade(mock(BitbucketPluginConfiguration.class));
     facade.setGitBaseDir(gitBasedir);
     GHRepository ghRepo = mock(GHRepository.class);
     when(ghRepo.getHtmlUrl()).thenReturn(new URL("https://bitbucket.com/SonarSource/sonar-java"));
@@ -105,7 +106,7 @@ public class PullRequestFacadeTest {
 
   @Test
   public void testEmptyGetCommitStatusForContext() throws IOException {
-    PullRequestFacade facade = new PullRequestFacade(mock(GitHubPluginConfiguration.class));
+    PullRequestFacade facade = new PullRequestFacade(mock(BitbucketPluginConfiguration.class));
     GHRepository ghRepo = mock(GHRepository.class);
     PagedIterable<GHCommitStatus> ghCommitStatuses = Mockito.mock(PagedIterable.class);
     GHPullRequest pr = mock(GHPullRequest.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS));
@@ -117,7 +118,7 @@ public class PullRequestFacadeTest {
 
   @Test
   public void testGetCommitStatusForContextWithOneCorrectStatus() throws IOException {
-    PullRequestFacade facade = new PullRequestFacade(mock(GitHubPluginConfiguration.class));
+    PullRequestFacade facade = new PullRequestFacade(mock(BitbucketPluginConfiguration.class));
     GHRepository ghRepo = mock(GHRepository.class);
     PagedIterable<GHCommitStatus> ghCommitStatuses = Mockito.mock(PagedIterable.class);
     List<GHCommitStatus> ghCommitStatusesList = new ArrayList<>();
@@ -134,7 +135,7 @@ public class PullRequestFacadeTest {
 
   @Test
   public void testInitGitBaseDirNotFound() throws Exception {
-    PullRequestFacade facade = new PullRequestFacade(mock(GitHubPluginConfiguration.class));
+    PullRequestFacade facade = new PullRequestFacade(mock(BitbucketPluginConfiguration.class));
     File projectBaseDir = temp.newFolder();
     facade.initGitBaseDir(projectBaseDir);
     assertThat(facade.getPath(new DefaultInputFile("foo", "src/main/java/Foo.java").setModuleBaseDir(projectBaseDir.toPath()))).isEqualTo("src/main/java/Foo.java");
@@ -142,7 +143,7 @@ public class PullRequestFacadeTest {
 
   @Test
   public void testInitGitBaseDir() throws Exception {
-    PullRequestFacade facade = new PullRequestFacade(mock(GitHubPluginConfiguration.class));
+    PullRequestFacade facade = new PullRequestFacade(mock(BitbucketPluginConfiguration.class));
     File gitBaseDir = temp.newFolder();
     Files.createDirectory(gitBaseDir.toPath().resolve(".git"));
     File projectBaseDir = new File(gitBaseDir, "myProject");

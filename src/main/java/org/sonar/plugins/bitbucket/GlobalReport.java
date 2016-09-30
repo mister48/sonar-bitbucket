@@ -1,5 +1,5 @@
 /*
- * SonarQube :: GitHub Plugin
+ * SonarQube :: Bitbucket Plugin
  * Copyright (C) 2015-2016 SonarSource SA
  * mailto:contact AT sonarsource DOT com
  *
@@ -20,8 +20,9 @@
 package org.sonar.plugins.bitbucket;
 
 import java.util.Locale;
+
 import javax.annotation.Nullable;
-import org.kohsuke.bitbucket.GHCommitState;
+
 import org.sonar.api.batch.postjob.issue.PostJobIssue;
 import org.sonar.api.batch.rule.Severity;
 
@@ -34,7 +35,7 @@ public class GlobalReport {
   private int maxGlobalReportedIssues;
 
   public GlobalReport(MarkDownUtils markDownUtils, boolean tryReportIssuesInline) {
-    this(markDownUtils, tryReportIssuesInline, GitHubPluginConfiguration.MAX_GLOBAL_ISSUES);
+    this(markDownUtils, tryReportIssuesInline, BitbucketPluginConfiguration.MAX_GLOBAL_ISSUES);
   }
 
   public GlobalReport(MarkDownUtils markDownUtils, boolean tryReportIssuesInline, int maxGlobalReportedIssues) {

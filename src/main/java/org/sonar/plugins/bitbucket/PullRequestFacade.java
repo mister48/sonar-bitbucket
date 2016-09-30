@@ -1,5 +1,5 @@
 /*
- * SonarQube :: GitHub Plugin
+ * SonarQube :: Bitbucket Plugin
  * Copyright (C) 2015-2016 SonarSource SA
  * mailto:contact AT sonarsource DOT com
  *
@@ -29,17 +29,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
-import org.kohsuke.bitbucket.GHCommitState;
-import org.kohsuke.bitbucket.GHCommitStatus;
-import org.kohsuke.bitbucket.GHIssueComment;
-import org.kohsuke.bitbucket.GHPullRequest;
-import org.kohsuke.bitbucket.GHPullRequestFileDetail;
-import org.kohsuke.bitbucket.GHPullRequestReviewComment;
-import org.kohsuke.bitbucket.GHRepository;
-import org.kohsuke.bitbucket.GitHub;
-import org.kohsuke.bitbucket.GitHubBuilder;
+
 import org.sonar.api.batch.BatchSide;
 import org.sonar.api.batch.InstantiationStrategy;
 import org.sonar.api.batch.fs.InputComponent;
@@ -51,7 +44,7 @@ import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
 /**
- * Facade for all WS interaction with GitHub.
+ * Facade for all WS interaction with Bitbucket.
  */
 @BatchSide
 @InstantiationStrategy(InstantiationStrategy.PER_BATCH)
@@ -61,7 +54,7 @@ public class PullRequestFacade {
 
   static final String COMMIT_CONTEXT = "sonarqube";
 
-  private final GitHubPluginConfiguration config;
+  private final BitbucketPluginConfiguration config;
   private Map<String, Map<Integer, Integer>> patchPositionMappingByFile;
   private Map<String, Map<Integer, GHPullRequestReviewComment>> existingReviewCommentsByLocationByFile = new HashMap<>();
   private GHRepository ghRepo;
@@ -70,14 +63,14 @@ public class PullRequestFacade {
   private File gitBaseDir;
   private String myself;
 
-  public PullRequestFacade(GitHubPluginConfiguration config) {
+  public PullRequestFacade(BitbucketPluginConfiguration config) {
     this.config = config;
   }
 
   public void init(int pullRequestNumber, File projectBaseDir) {
     initGitBaseDir(projectBaseDir);
     try {
-      GitHub bitbucket = new GitHubBuilder().withEndpoint(config.endpoint()).withOAuthToken(config.oauth()).build();
+      Bitbucket bitbucket = new BitbucketBuilder().withEndpoint(config.endpoint()).withOAuthToken(config.oauth()).build();
       setGhRepo(bitbucket.getRepository(config.repository()));
       setPr(ghRepo.getPullRequest(pullRequestNumber));
       LOG.info("Starting analysis of pull request: " + pr.getHtmlUrl());
@@ -85,8 +78,8 @@ public class PullRequestFacade {
       loadExistingReviewComments();
       patchPositionMappingByFile = mapPatchPositionsToLines(pr);
     } catch (IOException e) {
-      LOG.debug("Unable to perform GitHub WS operation", e);
-      throw MessageException.of("Unable to perform GitHub WS operation: " + e.getMessage());
+      LOG.debug("Unable to perform Bitbucket WS operation", e);
+      throw MessageException.of("Unable to perform Bitbucket WS operation: " + e.getMessage());
     }
   }
 
@@ -141,7 +134,7 @@ public class PullRequestFacade {
   }
 
   /**
-   * GitHub expect review comments to be added on "patch lines" (aka position) but not on file lines.
+   * Bitbucket expect review comments to be added on "patch lines" (aka position) but not on file lines.
    * So we have to iterate over each patch and compute corresponding file line in order to later map issues to the correct position.
    * @return Map File path -> Line -> Position
    */
@@ -272,7 +265,7 @@ public class PullRequestFacade {
       }
       ghRepo.createCommitStatus(pr.getHead().getSha(), status, targetUrl, statusDescription, COMMIT_CONTEXT);
     } catch (FileNotFoundException e) {
-      String msg = "Unable to set pull request status. GitHub account probably miss push permission on the repository.";
+      String msg = "Unable to set pull request status. Bitbucket account probably miss push permission on the repository.";
       if (LOG.isDebugEnabled()) {
         LOG.warn(msg, e);
       } else {

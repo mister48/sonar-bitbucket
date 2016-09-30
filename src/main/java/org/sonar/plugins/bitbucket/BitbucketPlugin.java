@@ -1,5 +1,5 @@
 /*
- * SonarQube :: GitHub Plugin
+ * SonarQube :: Bitbucket Plugin
  * Copyright (C) 2015-2016 SonarSource SA
  * mailto:contact AT sonarsource DOT com
  *
@@ -27,33 +27,33 @@ import org.sonar.api.PropertyType;
 
 @Properties({
   @Property(
-    key = GitHubPlugin.BITBUCKET_ENDPOINT,
+    key = BitbucketPlugin.BITBUCKET_ENDPOINT,
     defaultValue = "https://api.bitbucket.com",
-    name = "GitHub API Endpoint",
-    description = "URL to access GitHub WS API. Deafult value is fine for public GitHub. Can be modified for GitHub enterprise.",
+    name = "Bitbucket API Endpoint",
+    description = "URL to access Bitbucket WS API. Deafult value is fine for public Bitbucket. Can be modified for Bitbucket enterprise.",
     global = true),
   @Property(
-    key = GitHubPlugin.BITBUCKET_OAUTH,
-    name = "GitHub OAuth token",
+    key = BitbucketPlugin.BITBUCKET_OAUTH,
+    name = "Bitbucket OAuth token",
     description = "Authentication token",
     global = false,
     type = PropertyType.PASSWORD),
   @Property(
-    key = GitHubPlugin.BITBUCKET_REPO,
-    name = "GitHub repository",
-    description = "GitHub repository for this project. Will be guessed from '" + CoreProperties.LINKS_SOURCES_DEV + "' if present",
+    key = BitbucketPlugin.BITBUCKET_REPO,
+    name = "Bitbucket repository",
+    description = "Bitbucket repository for this project. Will be guessed from '" + CoreProperties.LINKS_SOURCES_DEV + "' if present",
     project = false,
     global = false),
   @Property(
-    key = GitHubPlugin.BITBUCKET_PULL_REQUEST,
-    name = "GitHub Pull Request",
+    key = BitbucketPlugin.BITBUCKET_PULL_REQUEST,
+    name = "Bitbucket Pull Request",
     description = "Pull request number",
     project = false,
     module = false,
     global = false,
     type = PropertyType.INTEGER),
   @Property(
-    key = GitHubPlugin.BITBUCKET_DISABLE_INLINE_COMMENTS,
+    key = BitbucketPlugin.BITBUCKET_DISABLE_INLINE_COMMENTS,
     defaultValue = "false",
     name = "Disable issue reporting as inline comments",
     description = "Issues will not be reported as inline comments but only in the global summary comment",
@@ -61,7 +61,7 @@ import org.sonar.api.PropertyType;
     global = true,
     type = PropertyType.BOOLEAN)
 })
-public class GitHubPlugin implements Plugin {
+public class BitbucketPlugin implements Plugin {
 
   public static final String BITBUCKET_ENDPOINT = "sonar.bitbucket.endpoint";
   public static final String BITBUCKET_OAUTH = "sonar.bitbucket.oauth";
@@ -73,7 +73,7 @@ public class GitHubPlugin implements Plugin {
   public void define(Context context) {
     context.addExtensions(
       PullRequestIssuePostJob.class,
-      GitHubPluginConfiguration.class,
+      BitbucketPluginConfiguration.class,
       PullRequestProjectBuilder.class,
       PullRequestFacade.class,
       MarkDownUtils.class);

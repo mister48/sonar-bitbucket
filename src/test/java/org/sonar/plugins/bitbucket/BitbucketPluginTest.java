@@ -1,5 +1,5 @@
 /*
- * SonarQube :: GitHub Plugin
+ * SonarQube :: Bitbucket Plugin
  * Copyright (C) 2015-2016 SonarSource SA
  * mailto:contact AT sonarsource DOT com
  *
@@ -19,18 +19,18 @@
  */
 package org.sonar.plugins.bitbucket;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.Test;
 import org.sonar.api.Plugin;
 import org.sonar.api.utils.Version;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-public class GitHubPluginTest {
+public class BitbucketPluginTest {
 
   @Test
   public void uselessTest() {
     Plugin.Context context = new Plugin.Context(Version.parse("5.6"));
-    new GitHubPlugin().define(context);
+    new BitbucketPlugin().define(context);
     assertThat(context.getExtensions().size()).isGreaterThan(1);
   }
 

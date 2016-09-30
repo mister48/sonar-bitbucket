@@ -1,5 +1,5 @@
 /*
- * SonarQube :: GitHub Plugin
+ * SonarQube :: Bitbucket Plugin
  * Copyright (C) 2015-2016 SonarSource SA
  * mailto:contact AT sonarsource DOT com
  *
@@ -19,20 +19,22 @@
  */
 package org.sonar.plugins.bitbucket;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.annotation.CheckForNull;
+
 import org.sonar.api.CoreProperties;
 import org.sonar.api.batch.BatchSide;
 import org.sonar.api.batch.InstantiationStrategy;
 import org.sonar.api.config.Settings;
 import org.sonar.api.utils.MessageException;
 
-import static org.apache.commons.lang.StringUtils.isNotBlank;
-
 @BatchSide
 @InstantiationStrategy(InstantiationStrategy.PER_BATCH)
-public class GitHubPluginConfiguration {
+public class BitbucketPluginConfiguration {
 
   public static final int MAX_GLOBAL_ISSUES = 10;
 
@@ -40,24 +42,24 @@ public class GitHubPluginConfiguration {
   private Pattern gitSshPattern;
   private Pattern gitHttpPattern;
 
-  public GitHubPluginConfiguration(Settings settings) {
+  public BitbucketPluginConfiguration(Settings settings) {
     this.settings = settings;
     this.gitSshPattern = Pattern.compile(".*@bitbucket\\.com:(.*/.*)\\.git");
     this.gitHttpPattern = Pattern.compile("https?://bitbucket\\.com/(.*/.*)\\.git");
   }
 
   public int pullRequestNumber() {
-    return settings.getInt(GitHubPlugin.BITBUCKET_PULL_REQUEST);
+    return settings.getInt(BitbucketPlugin.BITBUCKET_PULL_REQUEST);
   }
 
   public String repository() {
-    if (settings.hasKey(GitHubPlugin.BITBUCKET_REPO)) {
+    if (settings.hasKey(BitbucketPlugin.BITBUCKET_REPO)) {
       return repoFromProp();
     }
     if (isNotBlank(settings.getString(CoreProperties.LINKS_SOURCES_DEV)) || isNotBlank(settings.getString(CoreProperties.LINKS_SOURCES))) {
       return repoFromScmProps();
     }
-    throw MessageException.of("Unable to determine GitHub repository name for this project. Please provide it using property '" + GitHubPlugin.BITBUCKET_REPO
+    throw MessageException.of("Unable to determine Bitbucket repository name for this project. Please provide it using property '" + BitbucketPlugin.BITBUCKET_REPO
       + "' or configure property '" + CoreProperties.LINKS_SOURCES + "'.");
   }
 
@@ -72,14 +74,14 @@ public class GitHubPluginConfiguration {
       repo = extractRepoFromGitUrl(url);
     }
     if (repo == null) {
-      throw MessageException.of("Unable to parse GitHub repository name for this project. Please check configuration:\n  * " + CoreProperties.LINKS_SOURCES_DEV
+      throw MessageException.of("Unable to parse Bitbucket repository name for this project. Please check configuration:\n  * " + CoreProperties.LINKS_SOURCES_DEV
         + ": " + settings.getString(CoreProperties.LINKS_SOURCES_DEV) + "\n  * " + CoreProperties.LINKS_SOURCES + ": " + settings.getString(CoreProperties.LINKS_SOURCES));
     }
     return repo;
   }
 
   private String repoFromProp() {
-    String urlOrRepo = settings.getString(GitHubPlugin.BITBUCKET_REPO);
+    String urlOrRepo = settings.getString(BitbucketPlugin.BITBUCKET_REPO);
     String repo = extractRepoFromGitUrl(urlOrRepo);
     if (repo == null) {
       return urlOrRepo;
@@ -102,19 +104,19 @@ public class GitHubPluginConfiguration {
 
   @CheckForNull
   public String oauth() {
-    return settings.getString(GitHubPlugin.BITBUCKET_OAUTH);
+    return settings.getString(BitbucketPlugin.BITBUCKET_OAUTH);
   }
 
   public boolean isEnabled() {
-    return settings.hasKey(GitHubPlugin.BITBUCKET_PULL_REQUEST);
+    return settings.hasKey(BitbucketPlugin.BITBUCKET_PULL_REQUEST);
   }
 
   public String endpoint() {
-    return settings.getString(GitHubPlugin.BITBUCKET_ENDPOINT);
+    return settings.getString(BitbucketPlugin.BITBUCKET_ENDPOINT);
   }
 
   public boolean tryReportIssuesInline() {
-    return !settings.getBoolean(GitHubPlugin.BITBUCKET_DISABLE_INLINE_COMMENTS);
+    return !settings.getBoolean(BitbucketPlugin.BITBUCKET_DISABLE_INLINE_COMMENTS);
   }
 
 }

@@ -1,121 +1,160 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>org.sonarsource.parent</groupId>
-    <artifactId>parent</artifactId>
-    <version>34</version>
-    <relativePath />
-  </parent>
+    <parent>
+        <groupId>org.sonarsource.parent</groupId>
+        <artifactId>parent</artifactId>
+        <version>34</version>
+        <relativePath />
+    </parent>
 
-  <groupId>org.sonarsource.bitbucket</groupId>
-  <artifactId>sonar-bitbucket-plugin</artifactId>
-  <name>SonarQube :: GitHub Plugin</name>
-  <packaging>sonar-plugin</packaging>
-  <version>1.4-SNAPSHOT</version>
-  <description>Provide some integration between GitHub and SonarQube</description>
-  <url>http://redirect.sonarsource.com/plugins/bitbucket.html</url>
-  <inceptionYear>2015</inceptionYear>
+    <groupId>org.sonarsource.bitbucket</groupId>
+    <artifactId>sonar-bitbucket-plugin</artifactId>
+    <name>SonarQube :: Bitbucket Plugin</name>
+    <packaging>sonar-plugin</packaging>
+    <version>1.4-SNAPSHOT</version>
+    <description>Provide some integration between Bitbucket and SonarQube</description>
+    <url>http://redirect.sonarsource.com/plugins/bitbucket.html</url>
+    <inceptionYear>2015</inceptionYear>
   
-  <properties>
-    <sonar.version>5.6</sonar.version>
-    <sonar.pluginName>GitHub</sonar.pluginName>
-    <sonar.pluginClass>org.sonar.plugins.bitbucket.GitHubPlugin</sonar.pluginClass>
+    <properties>
+        <sonar.version>5.6</sonar.version>
+        <sonar.pluginName>Bitbucket</sonar.pluginName>
+        <sonar.pluginClass>org.sonar.plugins.bitbucket.BitbucketPlugin</sonar.pluginClass>
 
-    <!-- used for deployment to SonarSource Artifactory -->
-    <gitRepositoryName>sonar-bitbucket</gitRepositoryName>
-  </properties>
+        <!-- used for deployment to SonarSource Artifactory -->
+        <gitRepositoryName>sonar-bitbucket</gitRepositoryName>
+        <bitbucket.version>4.8.4</bitbucket.version>
+    </properties>
 
-  <organization>
-    <name>SonarSource</name>
-    <url>http://www.sonarsource.com</url>
-  </organization>
+    <organization>
+        <name>SonarSource</name>
+        <url>http://www.sonarsource.com</url>
+    </organization>
 
-  <licenses>
-    <license>
-      <name>GNU LGPL 3</name>
-      <url>http://www.gnu.org/licenses/lgpl.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
+    <licenses>
+        <license>
+            <name>GNU LGPL 3</name>
+            <url>http://www.gnu.org/licenses/lgpl.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
-  <developers>
-    <developer>
-      <id>henryju</id>
-      <name>Julien Henry</name>
-      <timezone>+1</timezone>
-    </developer>
-  </developers>
+    <developers>
+        <developer>
+            <id>mister48</id>
+            <name>Christian Martin Keul</name>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
 
-  <scm>
-    <connection>scm:git:git@bitbucket.com:SonarSource/sonar-bitbucket.git</connection>
-    <developerConnection>scm:git:git@bitbucket.com:SonarSource/sonar-bitbucket.git</developerConnection>
-    <url>https://bitbucket.com/SonarSource/sonar-bitbucket</url>
-    <tag>HEAD</tag>
-  </scm>
+    <scm>
+        <connection>scm:git:git@bitbucket.com:SonarSource/sonar-bitbucket.git</connection>
+        <developerConnection>scm:git:git@bitbucket.com:SonarSource/sonar-bitbucket.git</developerConnection>
+        <url>https://bitbucket.com/SonarSource/sonar-bitbucket</url>
+        <tag>HEAD</tag>
+    </scm>
 
-  <issueManagement>
-    <system>jira</system>
-    <url>http://jira.sonarsource.com/browse/SONARGITUB</url>
-  </issueManagement>
+    <issueManagement>
+        <system>jira</system>
+        <url>http://jira.sonarsource.com/browse/SONARGITUB</url>
+    </issueManagement>
 
-  <repositories>
-    <!--
-    Unfortunately this is required because the transitive dependency org.jenkins-ci:jenkins:pom:1.26
-    is not available in Maven central repository:
-    org.kohsuke:bitbucket-api:jar:1.76 -> com.infradna.tool:bridge-method-annotation:jar:1.14 -> org.jenkins-ci:annotation-indexer:jar:1.4 -> org.jenkins-ci:jenkins:pom:1.26
-    -->
-    <repository>
-      <id>repo.jenkins-ci.org</id>
-      <url>http://repo.jenkins-ci.org/public/</url>
-    </repository>
-  </repositories>
+    <repositories>
+        <!--
+        Unfortunately this is required because the transitive dependency org.jenkins-ci:jenkins:pom:1.26
+        is not available in Maven central repository:
+        org.kohsuke:bitbucket-api:jar:1.76 -> com.infradna.tool:bridge-method-annotation:jar:1.14 -> org.jenkins-ci:annotation-indexer:jar:1.4 -> org.jenkins-ci:jenkins:pom:1.26
+        -->
+        <repository>
+            <id>repo.jenkins-ci.org</id>
+            <url>http://repo.jenkins-ci.org/public/</url>
+        </repository>
+    </repositories>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.sonarsource.sonarqube</groupId>
-      <artifactId>sonar-plugin-api</artifactId>
-      <version>${sonar.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.google.code.findbugs</groupId>
-      <artifactId>jsr305</artifactId>
-      <version>2.0.3</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.kohsuke</groupId>
-      <artifactId>bitbucket-api</artifactId>
-      <version>1.76</version>
-    </dependency>
-    <!-- Override version used by GitHub API -->
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-      <version>2.4</version>
-    </dependency>
+    <dependencies>
+        <dependency>
+            <groupId>org.sonarsource.sonarqube</groupId>
+            <artifactId>sonar-plugin-api</artifactId>
+            <version>${sonar.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>2.0.3</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.bitbucket.server</groupId>
+            <artifactId>bitbucket-api</artifactId>
+            <scope>provided</scope>
+            <version>${bitbucket.version}</version>
+        </dependency>
+        <!-- Override version used by Bitbucket API -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
 
-    <!-- unit tests -->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.12</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
-      <version>1.7.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <version>1.9.5</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+        <!-- unit tests -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>1.7.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>1.9.5</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
+    <build>
+    	<pluginManagement>
+    		<plugins>
+    			<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+    			<plugin>
+    				<groupId>org.eclipse.m2e</groupId>
+    				<artifactId>lifecycle-mapping</artifactId>
+    				<version>1.0.0</version>
+    				<configuration>
+    					<lifecycleMappingMetadata>
+    						<pluginExecutions>
+    							<pluginExecution>
+    								<pluginExecutionFilter>
+    									<groupId>
+    										com.mycila.maven-license-plugin
+    									</groupId>
+    									<artifactId>
+    										maven-license-plugin
+    									</artifactId>
+    									<versionRange>
+    										[1.10.b1,)
+    									</versionRange>
+    									<goals>
+    										<goal>check</goal>
+    									</goals>
+    								</pluginExecutionFilter>
+    								<action>
+    									<ignore></ignore>
+    								</action>
+    							</pluginExecution>
+    						</pluginExecutions>
+    					</lifecycleMappingMetadata>
+    				</configuration>
+    			</plugin>
+    		</plugins>
+    	</pluginManagement>
+    </build>
 </project>

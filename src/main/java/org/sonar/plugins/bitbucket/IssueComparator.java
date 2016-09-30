@@ -1,5 +1,5 @@
 /*
- * SonarQube :: GitHub Plugin
+ * SonarQube :: Bitbucket Plugin
  * Copyright (C) 2015-2016 SonarSource SA
  * mailto:contact AT sonarsource DOT com
  *
@@ -21,7 +21,9 @@ package org.sonar.plugins.bitbucket;
 
 import java.util.Comparator;
 import java.util.Objects;
+
 import javax.annotation.Nullable;
+
 import org.sonar.api.batch.postjob.issue.PostJobIssue;
 import org.sonar.api.batch.rule.Severity;
 

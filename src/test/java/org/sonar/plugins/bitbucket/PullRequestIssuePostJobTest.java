@@ -1,5 +1,5 @@
 /*
- * SonarQube :: GitHub Plugin
+ * SonarQube :: Bitbucket Plugin
  * Copyright (C) 2015-2016 SonarSource SA
  * mailto:contact AT sonarsource DOT com
  *
@@ -19,8 +19,20 @@
  */
 package org.sonar.plugins.bitbucket;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.AdditionalMatchers.not;
+import static org.mockito.ArgumentCaptor.forClass;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.contains;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.util.Arrays;
+
 import javax.annotation.CheckForNull;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.kohsuke.bitbucket.GHCommitState;
@@ -35,16 +47,6 @@ import org.sonar.api.config.PropertyDefinition;
 import org.sonar.api.config.PropertyDefinitions;
 import org.sonar.api.config.Settings;
 import org.sonar.api.rule.RuleKey;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.AdditionalMatchers.not;
-import static org.mockito.ArgumentCaptor.forClass;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.contains;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class PullRequestIssuePostJobTest {
 
@@ -61,7 +63,7 @@ public class PullRequestIssuePostJobTest {
       .category(CoreProperties.CATEGORY_GENERAL)
       .defaultValue(CoreProperties.SERVER_BASE_URL_DEFAULT_VALUE)
       .build()));
-    GitHubPluginConfiguration config = new GitHubPluginConfiguration(settings);
+    BitbucketPluginConfiguration config = new BitbucketPluginConfiguration(settings);
     context = mock(PostJobContext.class);
 
     settings.setProperty("sonar.host.url", "http://192.168.0.1");

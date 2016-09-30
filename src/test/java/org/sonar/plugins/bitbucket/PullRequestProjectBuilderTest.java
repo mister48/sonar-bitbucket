@@ -1,5 +1,5 @@
 /*
- * SonarQube :: GitHub Plugin
+ * SonarQube :: Bitbucket Plugin
  * Copyright (C) 2015-2016 SonarSource SA
  * mailto:contact AT sonarsource DOT com
  *
@@ -19,7 +19,17 @@
  */
 package org.sonar.plugins.bitbucket;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.withSettings;
+
 import java.io.File;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -29,15 +39,6 @@ import org.sonar.api.batch.bootstrap.ProjectBuilder;
 import org.sonar.api.config.PropertyDefinitions;
 import org.sonar.api.config.Settings;
 import org.sonar.api.utils.MessageException;
-
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.withSettings;
 
 public class PullRequestProjectBuilderTest {
 
@@ -51,10 +52,10 @@ public class PullRequestProjectBuilderTest {
 
   @Before
   public void prepare() {
-    settings = new Settings(new PropertyDefinitions(GitHubPlugin.class));
+    settings = new Settings(new PropertyDefinitions(BitbucketPlugin.class));
     facade = mock(PullRequestFacade.class);
     mode = mock(AnalysisMode.class);
-    pullRequestProjectBuilder = new PullRequestProjectBuilder(new GitHubPluginConfiguration(settings), facade, mode);
+    pullRequestProjectBuilder = new PullRequestProjectBuilder(new BitbucketPluginConfiguration(settings), facade, mode);
 
   }
 
@@ -66,17 +67,17 @@ public class PullRequestProjectBuilderTest {
 
   @Test
   public void shouldFailIfNotPreview() {
-    settings.setProperty(GitHubPlugin.BITBUCKET_PULL_REQUEST, "1");
+    settings.setProperty(BitbucketPlugin.BITBUCKET_PULL_REQUEST, "1");
 
     thrown.expect(MessageException.class);
-    thrown.expectMessage("The GitHub plugin is only intended to be used in preview or issues mode. Please set 'sonar.analysis.mode'.");
+    thrown.expectMessage("The Bitbucket plugin is only intended to be used in preview or issues mode. Please set 'sonar.analysis.mode'.");
 
     pullRequestProjectBuilder.build(null);
   }
 
   @Test
   public void shouldNotFailIfIssues() {
-    settings.setProperty(GitHubPlugin.BITBUCKET_PULL_REQUEST, "1");
+    settings.setProperty(BitbucketPlugin.BITBUCKET_PULL_REQUEST, "1");
     when(mode.isIssues()).thenReturn(true);
 
     pullRequestProjectBuilder.build(mock(ProjectBuilder.Context.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS)));
